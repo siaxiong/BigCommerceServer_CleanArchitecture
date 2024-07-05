@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
 namespace Clean.Architecture.Core.Entities.Fishbowl;
-public class SOItem
+public class FBSOItem
 {
   public enum SOItemType {
     Sale = 10,
@@ -26,6 +26,9 @@ public class SOItem
     BOMConfigItem = 100
   }
 
+
+  public string b2cOrderItemId;
+
   [StringLength(4, ErrorMessage = "Flag variable cannot exceed 4 characters.")]
   public const string Flag = "Item";
   public SOItemType SOItemTypeID;
@@ -34,17 +37,28 @@ public class SOItem
   public string ProductNumber { set; get; }
   [StringLength(256, ErrorMessage = "ProductDescription variable cannot exceed 256 characters.")]
   public string ProductDescription;
+  public double ProductPrice;
   public int ProductQuantity;
   public string UOM;
+  public double discountAmount;
  
-   public SOItem(SOItemType SOItemType, string ProductNumber, string ProductDescription, int ProductQuantity, string UOM)
+   public FBSOItem(SOItemType SOItemType, string b2cOrderItemId, string ProductNumber, string ProductDescription,double ProductPrice, int ProductQuantity,
+     string UOM, double discount)
    {
+    this.b2cOrderItemId = b2cOrderItemId;
     this.SOItemTypeID = SOItemType;
     this.ProductNumber = ProductNumber;
     this.ProductDescription = ProductDescription;
+    this.ProductPrice = ProductPrice;
     this.ProductQuantity = ProductQuantity;
     this.UOM = UOM;
+    this.discountAmount = discount;
 
+  }
+
+  public string GetCSVFBSOItem()
+  {
+    return $"[{Flag},{SOItemTypeID},{ProductNumber},{ProductDescription},{ProductQuantity},{UOM}]";
   }
 
 

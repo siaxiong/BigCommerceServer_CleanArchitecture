@@ -11,12 +11,11 @@ public class B2COrderProduct
   public string id { get; set; }
   public string order_id { get; set; }
   public string product_id {  get; set; }
-
   public string sku {  get; set; }
   public int quantity { get; set; }
-  public string base_price { get; set; }
+  public double base_price { get; set; }
 
-  public B2COrderProduct(string id, string order_id, string product_id, string sku, int quantity, string base_price)
+  public B2COrderProduct(string id, string order_id, string product_id, string sku, int quantity, double base_price)
   { 
     this.id = id;
     this.order_id = order_id;

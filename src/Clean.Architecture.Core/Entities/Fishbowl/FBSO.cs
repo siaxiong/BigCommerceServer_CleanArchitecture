@@ -7,14 +7,22 @@ using System.Threading.Tasks;
 namespace Clean.Architecture.Core.Entities.Fishbowl;
 public class FBSO
 {
-  SOItem _sOItem;
   FBBillingAddress _fbillingAddress;
   FBShippingAddress _fbShippingAddress;
+  List<FBSOItem> _fbItemList;
 
-  public FBSO(SOItem sOItem, FBBillingAddress fbillingAddress, FBShippingAddress fbShippingAddress)
+  public FBSO(List<FBSOItem> items, FBBillingAddress fbillingAddress, FBShippingAddress fbShippingAddress)
   {
-    this._sOItem = sOItem;
+    this._fbItemList = items;
     this._fbillingAddress = fbillingAddress;
     this._fbShippingAddress = fbShippingAddress;
   }
+
+  public void AddFBSOItem(FBSOItem item)
+  {
+    _fbItemList.Add(item);
+  }
+
+  public FBSOItem GetFBSOItem(int id)
+  { return _fbItemList[id]; }
 }

@@ -6,18 +6,16 @@ using System.Threading.Tasks;
 using Clean.Architecture.Core.Entities.Base;
 using Clean.Architecture.Core.Entities.BC.B2C;
 using Clean.Architecture.Core.Entities.Fishbowl;
+using Clean.Architecture.Core.Services;
 
 namespace Clean.Architecture.Core.Interfaces.Fishbowl;
 public interface IFishbowlService
 {
-  public FBShippingAddress CreateFBShippingAddress(AddressBase address);
-
-/*  public FBBillingAddress CreateFBBillingAddress(AddressBase address);
-  public SOItem CreateFBSOItem(B2COrderProduct b2COrderProduct);
-  public SOItem CreateFBSOItemList(SOItem soItem);
-  public FBSO CreateFBSO(FBShippingAddress fBShippingAddress,
-    FBBillingAddress fBBillingAddress, List<SOItem> soItems);
-  public SOItem GetSOItem();*/
-
+  public FBShippingAddress CreateFBShippingAddress(B2CShippingAddress address);
+  public FBBillingAddress CreateFBBillingAddress(B2CBillingAddress address);
+  public FBSOItem CreateFBSOItem(B2COrderProduct b2COrderProduct);
+/*  public List<FBSOItem> CreateFBSOItemList(FBSOItem soItem);*/
+  public FBSO CreateFBSO(List<FBSOItem> items, FBBillingAddress fBBillingAddress,
+    FBShippingAddress fBShippingAddress);
 
 }

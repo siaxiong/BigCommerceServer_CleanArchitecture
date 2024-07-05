@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 using Clean.Architecture.Core.Entities.Base;
 
 namespace Clean.Architecture.Core.Entities.Fishbowl;
-public class FBBillingAddress
+public class FBBillingAddress : AddressBase
 {
+  public string billToName;
 
-
-  /*  public FBBillingAddress(string BillToName, string BillToAddress, string BillToCity,
-      string BillToZipCode,string BillToState,string BillToCountry) 
-    { 
-      this.BillToName = BillToName;
-      this.BillToAddress = BillToAddress;
-      this.BillToCity = BillToCity;
-      this.BillToZipCode = BillToZipCode;
-      this.BillToState = BillToState;
-      this.BillToCountry = BillToCountry; 
-    }*/
+  public FBBillingAddress(string billToName, string street, string city,
+    string zipcode, string state, string country)
+    : base(street, city, zipcode, state, country)
+  {
+    this.billToName = billToName;
+  }
 
 
 }

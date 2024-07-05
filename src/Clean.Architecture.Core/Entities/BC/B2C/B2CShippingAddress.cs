@@ -19,8 +19,27 @@ public class B2CShippingAddress : AddressBase
   public string shipping_method { get; set; }
   public string cost_ex_tax { get; set; }
 
+
+  public B2CShippingAddress(int id, int order_id, string first_name,
+  string last_name, string company, string street,
+  string city, string zipcode, string state, string country, string email,
+  string phone, int items_total, string shipping_method, string cost_ex_tax)
+  : base(street, city, state, zipcode, country)
+  {
+    this.id = id;
+    this.order_id = order_id;
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.company = company;
+    this.email = email;
+    this.phone = phone;
+    this.items_total = items_total;
+    this.shipping_method = shipping_method;
+    this.cost_ex_tax = cost_ex_tax;
+  }
+
   public B2CShippingAddress(int id, int order_id, string first_name, 
-    string last_name, string company, string street, string? street_2,
+    string last_name, string company, string street, string street_2,
     string city, string zipcode, string state,string country, string email,
     string phone, int items_total, string shipping_method, string cost_ex_tax)
     :base(street, city, state, zipcode, country)
@@ -36,4 +55,7 @@ public class B2CShippingAddress : AddressBase
     this.shipping_method  = shipping_method;
     this.cost_ex_tax = cost_ex_tax;
   }
+
+
+
 }

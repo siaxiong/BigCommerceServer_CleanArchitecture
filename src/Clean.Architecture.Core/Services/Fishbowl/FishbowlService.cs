@@ -13,17 +13,37 @@ using Clean.Architecture.Core.Interfaces.Fishbowl;
 namespace Clean.Architecture.Core.Services.Fishbowl;
 public class FishbowlService : IFishbowlService
 {
-  public FBShippingAddress CreateFBShippingAddress(AddressBase address) 
+  public FBShippingAddress CreateFBShippingAddress(B2CShippingAddress address) 
   {
     return new FBShippingAddress(address.street,address.city,address.state,
       address.zipcode,address.country);
   }
 
+  public FBBillingAddress CreateFBBillingAddress(B2CBillingAddress address) 
+  {
+    return new FBBillingAddress(address.first_name + " " + address.last_name, address.street_1, address.city, address.state,
+      address.zipcode, address.country);
+    
+  }
 
-/*  public FBShippingAddress CreateFBShippingAddress(AddressBase address) { }
-  public SOItem CreateFBSOItem(B2COrderProduct b2COrderProduct) { }
-  public SOItem CreateFBSOItemList(SOItem soItem) { }
-  public FBSO CreateFBSO(FBShippingAddress fBShippingAddress,
-    FBBillingAddress fBBillingAddress, List<FBSO> fBSOs)
-  { }*/
+  public FBSOItem CreateFBSOItem(B2COrderProduct item)
+  {
+    return new FBSOItem(FBSOItem.SOItemType.Sale,item.id, item.sku, "Magicore", item.base_price, item.quantity, "EACH", 20);
+  }
+
+  public void AddFBSOItem(FBSO so,FBSOItem item)
+  {
+    so.AddFBSOItem(item);
+  }
+
+  public FBSO CreateFBSO(List<FBSOItem> items, FBBillingAddress fBBillingAddress,
+    FBShippingAddress fBShippingAddress)
+  {
+    return new FBSO(items, fBBillingAddress, fBShippingAddress);
+  }
+
+  public string CreateCSVFBSO(FBSO fbso)
+  {
+    return "";
+  }
 }
