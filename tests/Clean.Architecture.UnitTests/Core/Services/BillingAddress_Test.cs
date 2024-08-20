@@ -5,16 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Clean.Architecture.Core.Entities.Fishbowl;
 using FluentAssertions;
 using Xunit;
-using Clean.Architecture.Core.Services.Fishbowl;
 using Moq;
-using Clean.Architecture.Core.Interfaces.BC.B2C;
 using NSubstitute;
-using Clean.Architecture.Core.Entities.BC.B2C;
-using Clean.Architecture.Core.Services.BC.B2C;
-
 namespace Clean.Architecture.UnitTests.Core.Services;
 
 

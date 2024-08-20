@@ -12,6 +12,15 @@ using FastEndpoints.Swagger;
 using MediatR;
 using Serilog;
 using Serilog.Extensions.Logging;
+using Clean.Architecture.Web.Middlewares;
+using Clean.Architecture.UseCases.Abstractions;
+using Clean.Architecture.Infrastructure.Respositories;
+using Clean.Architecture.Web.Fishbowl;
+using Microsoft.Extensions.DependencyInjection;
+using Clean.Architecture.Infrastructure.BigCommerce;
+using Clean.Architecture.UseCases.Abstractions.Respository;
+using System.Collections;
+
 
 var logger = Log.Logger = new LoggerConfiguration()
   .Enrich.FromLogContext()
@@ -26,6 +35,24 @@ builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Con
 var microsoftLogger = new SerilogLoggerFactory(logger)
     .CreateLogger<Program>();
 
+builder.Services.AddScoped<IFishbowlRespository, FishbowlRespository>();
+builder.Services.AddScoped<IBigCommerceRepository, BigCommerceRepository>();
+builder.Services.AddHttpClient<FishbowlContext>().ConfigurePrimaryHttpMessageHandler(() =>
+{
+  return new SocketsHttpHandler() { PooledConnectionLifetime = TimeSpan.FromSeconds(15) };
+}).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+builder.Services.AddHttpClient<B2C_V2_Context>().ConfigurePrimaryHttpMessageHandler(() =>
+{
+  return new SocketsHttpHandler() { PooledConnectionLifetime = TimeSpan.FromSeconds(15) };
+}).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+builder.Services.AddHttpClient<B2C_V3_Context>().ConfigurePrimaryHttpMessageHandler(() =>
+{
+  return new SocketsHttpHandler() { PooledConnectionLifetime = TimeSpan.FromSeconds(15) };
+}).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+builder.Services.AddHttpClient<B2B_Context>().ConfigurePrimaryHttpMessageHandler(() =>
+{
+  return new SocketsHttpHandler() { PooledConnectionLifetime = TimeSpan.FromSeconds(15) };
+}).SetHandlerLifetime(Timeout.InfiniteTimeSpan);
 // Configure Web Behavior
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -40,6 +67,12 @@ builder.Services.AddFastEndpoints()
                 });
 
 ConfigureMediatR();
+
+var hashtable = Environment.GetEnvironmentVariables();
+foreach(DictionaryEntry entry in hashtable)
+{
+  Console.WriteLine(entry.Key + ":" + entry.Value); 
+}
 
 builder.Services.AddInfrastructureServices(builder.Configuration, microsoftLogger);
 
@@ -71,6 +104,8 @@ else
   app.UseHsts();
 }
 
+
+app.UseAuthenticationMiddleware();
 app.UseFastEndpoints()
     .UseSwaggerGen(); // Includes AddFileServer and static files middleware
 
@@ -79,6 +114,7 @@ app.UseHttpsRedirection();
 await SeedDatabase(app);
 
 app.Run();
+
 
 static async Task SeedDatabase(WebApplication app)
 {
@@ -104,7 +140,7 @@ void ConfigureMediatR()
   var mediatRAssemblies = new[]
 {
   Assembly.GetAssembly(typeof(Contributor)), // Core
-  Assembly.GetAssembly(typeof(CreateContributorCommand)) // UseCases
+  Assembly.GetAssembly(typeof(CreateContributorCommand)), // UseCases
 };
   builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(mediatRAssemblies!));
   builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));

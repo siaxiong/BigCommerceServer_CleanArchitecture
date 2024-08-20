@@ -6,44 +6,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Clean.Architecture.Core.Entities.Base;
-using Clean.Architecture.Core.Entities.BC.B2C;
+using Clean.Architecture.Core.Entities.BC;
 using Clean.Architecture.Core.Entities.Fishbowl;
-using Clean.Architecture.Core.Interfaces.Fishbowl;
+using Clean.Architecture.Core.Interfaces;
 
 namespace Clean.Architecture.Core.Services.Fishbowl;
-public class FishbowlService : IFishbowlService
+/*public class FishbowlService : IFishbowlService
 {
-  public FBShippingAddress CreateFBShippingAddress(B2CShippingAddress address) 
+  public FB_ShippingAddress CreateFBShippingAddress(BC_ShippingAddress address) 
   {
-    return new FBShippingAddress(address.street,address.city,address.state,
+    return new FB_ShippingAddress(address.street,address.city,address.state,
       address.zipcode,address.country);
   }
 
-  public FBBillingAddress CreateFBBillingAddress(B2CBillingAddress address) 
+  public FB_BillingAddress CreateFBBillingAddress(BC_BillingAddress address) 
   {
-    return new FBBillingAddress(address.first_name + " " + address.last_name, address.street_1, address.city, address.state,
+    return new FB_BillingAddress(address.first_name + " " + address.last_name, address.street_1, address.city, address.state,
       address.zipcode, address.country);
     
   }
 
-  public FBSOItem CreateFBSOItem(B2COrderProduct item)
+  public FB_SOItem CreateFBSOItem(BC_OrderProduct item)
   {
-    return new FBSOItem(FBSOItem.SOItemType.Sale,item.id, item.sku, "Magicore", item.base_price, item.quantity, "EACH", 20);
+    return new FB_SOItem(FB_SOItem.SOItemType.Sale,item.id, item.sku, "Magicore", item.base_price, item.quantity, "EACH", 20);
   }
 
-  public void AddFBSOItem(FBSO so,FBSOItem item)
+  public void AddFBSOItem(FB_SO so,FB_SOItem item)
   {
     so.AddFBSOItem(item);
   }
 
-  public FBSO CreateFBSO(List<FBSOItem> items, FBBillingAddress fBBillingAddress,
-    FBShippingAddress fBShippingAddress)
+  public FB_SO CreateFBSO(List<FB_SOItem> items, FB_BillingAddress fBBillingAddress,
+    FB_ShippingAddress fBShippingAddress)
   {
-    return new FBSO(items, fBBillingAddress, fBShippingAddress);
+    return new FB_SO(items, fBBillingAddress, fBShippingAddress);
   }
 
-  public string CreateCSVFBSO(FBSO fbso)
+  public string CreateCSVFBSO(FB_SO fbso)
   {
     return "";
   }
+
 }
+*/

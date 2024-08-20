@@ -4,10 +4,16 @@
     <PackageReference Include="Ardalis.Result" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Clean.Architecture.Core\Clean.Architecture.Core.csproj" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BigCommerce\Get\" />
   </ItemGroup>
 
 </Project>

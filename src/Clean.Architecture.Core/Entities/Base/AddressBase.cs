@@ -8,27 +8,28 @@ namespace Clean.Architecture.Core.Entities.Base;
 
 public abstract class AddressBase
 {
-  public string street;
+  public string street_1;
   public string? street_2;
+
   public string city;
   public string state;
   public string zipcode;
   public string country;
 
 
-  public AddressBase(string street, string city,
+  public AddressBase(string street_1, string city,
     string state, string zipcode, string country)
   {
-    this.street = street;
+    this.street_1 = street_1;
     this.city = city;
     this.state = state;
     this.zipcode = zipcode;
     this.country = country;
   }
-  public AddressBase(string street,string street_2, string city,
+  public AddressBase(string str,string street_2, string city,
   string state, string zipcode, string country)
   {
-    this.street = street;
+    this.street_1 = str;
     this.street_2 = street_2;
     this.city = city;
     this.state = state;
@@ -36,15 +37,8 @@ public abstract class AddressBase
     this.country = country;
   }
 
-
-
-  public string Street {
-    get { return street; }
-    set {  street = value; }
-  }
-
-  public string City { get { return city; } set { city = value; } }
-  public string State { get { return state; } set { state = value; } }
-  public string Zipcode { get { return zipcode; } set { zipcode = value; } }
-  public string Country { get { return country; } set { country = value; } }
+/*  public string street_1 {
+    get { return street_1; }
+    set {  street_1 = value; }
+  }*/
 }

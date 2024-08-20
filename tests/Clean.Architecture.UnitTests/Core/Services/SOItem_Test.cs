@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Clean.Architecture.Core.Entities.Fishbowl;
-using Clean.Architecture.Core.Interfaces.Fishbowl;
 using FluentAssertions;
 using Moq;
 using Xunit;

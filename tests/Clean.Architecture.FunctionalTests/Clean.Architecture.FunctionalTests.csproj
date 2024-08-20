@@ -3,6 +3,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
@@ -19,9 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Clean.Architecture.Core\Clean.Architecture.Core.csproj" />
     <ProjectReference Include="..\..\src\Clean.Architecture.Infrastructure\Clean.Architecture.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Clean.Architecture.UseCases\Clean.Architecture.UseCases.csproj" />
     <ProjectReference Include="..\..\src\Clean.Architecture.Web\Clean.Architecture.Web.csproj" />
+    <ProjectReference Include="..\Clean.Architecture.IntegrationTests\Clean.Architecture.IntegrationTests.csproj" />
+    <ProjectReference Include="..\Clean.Architecture.UnitTests\Clean.Architecture.UnitTests.csproj" />
   </ItemGroup>
 
 </Project>
