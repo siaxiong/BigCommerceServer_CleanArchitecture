@@ -15,9 +15,9 @@ public class B2B_Context
   public B2B_Context(HttpClient httpClient, IConfiguration config)
   {
     _httpClient = httpClient;
-    _httpClient.BaseAddress = new Uri("na");
+    _httpClient.BaseAddress = new Uri(config["env:B2B_ENDPOINT"]!);
     _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-    _httpClient.DefaultRequestHeaders.Add("authToken", "na");
+    _httpClient.DefaultRequestHeaders.Add("authToken", config["env:B2B_TOKEN"]);
   }
 
   public async Task<HttpResponseMessage> GetAllQuotes()
