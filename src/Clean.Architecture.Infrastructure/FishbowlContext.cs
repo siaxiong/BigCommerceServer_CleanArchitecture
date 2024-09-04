@@ -17,7 +17,6 @@ public class FishbowlContext
   private string FB_USERNAME;
   private string FB_PASSWORD;
   
-  
   public FishbowlContext(HttpClient httpClient, IConfiguration config)
   {
     this._httpClient = httpClient;
@@ -32,14 +31,9 @@ public class FishbowlContext
   public async Task CreateLogin()
   {
     var content = new StringContent($"{{\"appName\":\"{FB_APPNAME}\",\"appId\":{FB_APPID},\"username\":\"{FB_USERNAME}\",\"password\":\"{FB_PASSWORD}\"}}", Encoding.UTF8, "application/json");
-
-    /*
-    var content = new StringContent($"{{\"appName\":\"{_configuration["env:FB_APPNAME"]}\",\"appId\":{_configuration["env:FB_APPID"]},\"username\":\"{_configuration["env:FB_USERNAME"]}\",\"password\":\"{_configuration["FB_PASSWORD"]}\"}}", Encoding.UTF8, "application/json");
-    */
-    Console.WriteLine(content);
+    
     var resp = await _httpClient.PostAsync(_httpClient.BaseAddress + "/login", content);
     var respAsString = await resp.Content.ReadAsStringAsync();
-    Console.WriteLine(respAsString);
     Http_FB_Login? data = JsonSerializer.Deserialize<Http_FB_Login>(respAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     if (data != null) _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", data.token);
     else throw new Exception("Bad api request for fishbowl login");
