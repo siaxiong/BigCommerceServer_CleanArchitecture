@@ -76,4 +76,10 @@ public class B2C_V2_Context
     if (data != null) return data;
     else throw new Exception("null resp, GetCustomerGroupName()");
   }
+
+  public async Task ArchiveBadOrder(int orderId)
+  {
+    var resp = await _httpClient.DeleteAsync(_httpClient.BaseAddress + "/orders/" + orderId);
+    Console.WriteLine(resp.StatusCode.ToString());
+  }
 }

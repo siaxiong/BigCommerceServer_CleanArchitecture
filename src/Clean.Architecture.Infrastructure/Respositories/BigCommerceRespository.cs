@@ -126,6 +126,13 @@ public class BigCommerceRepository : IBigCommerceRepository
       shipAddr.cost_ex_tax
       );
   }
+
+  public async Task<int> GetB2BCustomerId(int orderId)
+  {
+    var b2bCustomerId = await _b2b_context.GetB2BCompanyIdUsingB2COrderId(orderId);
+    Console.WriteLine(b2bCustomerId);
+    return b2bCustomerId;
+  }
   public async Task<BC_Customer> GetBCCustomer(int customerId)
   {
     Http_B2C_V3_Customer customer = await _b2c_v3_context.GetCustomer(customerId);
@@ -140,4 +147,18 @@ public class BigCommerceRepository : IBigCommerceRepository
       throw new Exception("null resp, BC Repo GetCustomer()");
   }
 
+  public async Task ArchiveOrder(int orderId)
+  { 
+    await _b2c_v2_context.ArchiveBadOrder(orderId);
+  }
+
+  public async Task ChangeOrderStatus(int orderId)
+  {
+    await _b2b_context.ChangeerB2BOrdStatus(orderId);
+  }
+
+  public async Task UpdateCompanyCredits(int companyId, double credits)
+  {
+    await _b2b_context.UpdateB2BCompanyCredits(companyId, credits);
+  }
 }

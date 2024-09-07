@@ -12,6 +12,12 @@ public interface IBigCommerceRepository
   Task<List<BC_OrderProduct>> GetBCOrderProductList(int orderId);
   Task<BC_BillingAddress> GetBCOrderBillingAddress(int orderId);
   Task<BC_ShippingAddress> GetBCOrderShippingAddress(int orderId);
+  Task<int> GetB2BCustomerId(int b2cOrderId);
   Task<BC_Customer> GetBCCustomer(int customerId);
+  Task ArchiveOrder(int orderId);
+  Task ChangeOrderStatus(int orderId);
+
+  Task UpdateCompanyCredits(int companyId, double credits);
 /*  Task<string> GetCustomerEmail(int customerId);
-*/}
+*/
+}

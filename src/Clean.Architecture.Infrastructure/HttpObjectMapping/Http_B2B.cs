@@ -21,6 +21,9 @@ public record Http_B2B_CompanyUser (
   int customerId
 );
 
+public record Http_B2B_Companies_Payload(
+  List<Http_B2B_CompanyUser> data
+);
 public record Http_B2B_Company_Payload (
   Http_B2B_Company data
   );

@@ -26,4 +26,10 @@ public class FishbowlRespository : IFishbowlRespository
     await _fbContext.CreateFBSO(orderString);
   }
 
+  public async Task<double> GetFbCustomerCredit(string customerName)
+  {
+    var resp = await _fbContext.GetCustomerCredit(customerName);
+    return resp;
+  }
+
 }
