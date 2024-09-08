@@ -19,9 +19,7 @@ public class Get(IBigCommerceRepository bigCommerceRepository) : Endpoint<GetOrd
       
   public override async Task<GetOrderResponse> HandleAsync(GetOrderRequest orderReq, CancellationToken cancellationToken)
   {
-    Console.WriteLine(orderReq.OrderId);
     var resp = await bigCommerceRepository.GetBCOrder(Convert.ToInt32(orderReq.OrderId));
-    Console.WriteLine(resp);
     Response = new GetOrderResponse(resp);
     return Response;
   }

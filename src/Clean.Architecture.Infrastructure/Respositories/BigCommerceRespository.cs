@@ -130,7 +130,6 @@ public class BigCommerceRepository : IBigCommerceRepository
   public async Task<int> GetB2BCustomerId(int orderId)
   {
     var b2bCustomerId = await _b2b_context.GetB2BCompanyIdUsingB2COrderId(orderId);
-    Console.WriteLine(b2bCustomerId);
     return b2bCustomerId;
   }
   public async Task<BC_Customer> GetBCCustomer(int customerId)
@@ -138,7 +137,6 @@ public class BigCommerceRepository : IBigCommerceRepository
     Http_B2C_V3_Customer customer = await _b2c_v3_context.GetCustomer(customerId);
     Http_B2B_CompanyUser b2b_User = await _b2b_context.GetB2BCompanyUserUsingEmail(customer.email);
     Http_B2B_Company b2b_Company = await _b2b_context.GetCompany(b2b_User.companyId);
-    Console.WriteLine($"b2b_Company: {b2b_Company}");
 
     if (customer != null)
       return new BC_Customer(customer.id, b2b_Company.companyName, customer.first_name,

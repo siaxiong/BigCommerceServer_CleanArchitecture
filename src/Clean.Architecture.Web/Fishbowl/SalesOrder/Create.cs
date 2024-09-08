@@ -19,7 +19,6 @@ public class Create(IMediator _mediator) : Endpoint<CreateSalesOrderRequest, Cre
   {
     string fB_SO = await _mediator.Send(new CreateSalesOrderCommand(req.orderId));
 
-    Console.WriteLine(fB_SO);
     Response = new CreateSalesOrderResponse(fB_SO);
     return Response;
   }
