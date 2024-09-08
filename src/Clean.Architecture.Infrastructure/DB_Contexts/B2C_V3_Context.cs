@@ -15,8 +15,8 @@ public class B2C_V3_Context
 
   public B2C_V3_Context(HttpClient httpClient, IConfiguration config) {
     _httpClient = httpClient;
-    _httpClient.BaseAddress = new Uri(config["env:B2C_V3_ENDPOINT"]!);
-    _httpClient.DefaultRequestHeaders.Add("X-Auth-Token", config["env:B2C_V3_TOKEN"]);
+    _httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("B2C_V3_ENDPOINT")!);
+    _httpClient.DefaultRequestHeaders.Add("X-Auth-Token", Environment.GetEnvironmentVariable("B2C_V3_TOKEN"));
     _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
   } 
   public async Task<HttpResponseMessage> GetVariantImage() {

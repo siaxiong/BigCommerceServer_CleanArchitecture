@@ -14,9 +14,9 @@ public class B2C_V2_Context
   private readonly HttpClient _httpClient;
   public B2C_V2_Context(HttpClient httpClient, IConfiguration config) {
     _httpClient = httpClient;
-    _httpClient.BaseAddress = new Uri(config["env:B2C_V2_ENDPOINT"]!);
+    _httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("B2C_V2_ENDPOINT")!);
     _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-    _httpClient.DefaultRequestHeaders.Add("X-Auth-Token", config["env:B2C_V2_TOKEN"]);
+    _httpClient.DefaultRequestHeaders.Add("X-Auth-Token", Environment.GetEnvironmentVariable("B2C_V2_TOKEN"));
   }
   public async Task<Http_B2C_Order> GetOrder(int orderId) {
     var resp = await _httpClient.GetAsync(_httpClient.BaseAddress + "/orders/" + orderId);

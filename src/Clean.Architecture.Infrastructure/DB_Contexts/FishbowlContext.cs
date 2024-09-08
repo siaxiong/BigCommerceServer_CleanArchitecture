@@ -34,13 +34,16 @@ public class FishbowlContext {
   public FishbowlContext(HttpClient httpClient, IConfiguration config) {
     this._httpClient = httpClient;
     this._configuration = config;
-    this.FB_APPNAME = this._configuration["env:FB_APPNAME"]!;
-    this.FB_APPID = int.Parse(this._configuration["env:FB_APPID"]!);
-    this.FB_USERNAME = this._configuration["env:FB_USERNAME"]!;
-    this.FB_PASSWORD = this._configuration["env:FB_PASSWORD"]!;
-    this._httpClient.BaseAddress = new Uri(config["env:FB_ENDPOINT"]!);
+    this.FB_APPNAME = Environment.GetEnvironmentVariable("FB_APPNAME")!;
+    this.FB_APPID = Convert.ToInt32(Environment.GetEnvironmentVariable("FB_APPID")!);
+    this.FB_USERNAME = Environment.GetEnvironmentVariable("FB_USERNAME")!;
+    this.FB_PASSWORD = Environment.GetEnvironmentVariable("FB_PASSWORD")!;
+    this._httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("FB_ENDPOINT")!);
+    
+    
     this._httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
     this._httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("FB_TOKEN"));
+    
   }
 
   public async Task CreateLogin() {
