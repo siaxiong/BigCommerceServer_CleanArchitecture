@@ -47,8 +47,7 @@ public class FishbowlContext {
   }
 
   public async Task CreateLogin() {
-    var content =
-      new StringContent(
+    var content = new StringContent(
         $"{{\"appName\":\"{FB_APPNAME}\",\"appId\":{FB_APPID},\"username\":\"{FB_USERNAME}\",\"password\":\"{FB_PASSWORD}\"}}",
         Encoding.UTF8, "application/json");
 
@@ -57,9 +56,6 @@ public class FishbowlContext {
     Http_FB_Login? data = JsonSerializer.Deserialize<Http_FB_Login>(await resp.Content.ReadAsStringAsync(),
       new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     if (data != null) {
-      _httpClient.DefaultRequestHeaders.Authorization =
-        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", data.token);
-      
       Environment.SetEnvironmentVariable("FB_TOKEN", data.token);
     }
     else throw new Exception("Bad api request for fishbowl login");
@@ -116,8 +112,9 @@ public class FishbowlContext {
         request2.Headers.Add("Accept", "application/sql");
         request2.Content = httpContent;
         
+        _httpClient.DefaultRequestHeaders.Authorization =
+          new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("FB_TOKEN"));
         var request = await _httpClient.SendAsync(request2);
-        requestStatusCode = request.StatusCode.ToString();
       
         var jssonResp2 = JsonNode.Parse(await request.Content.ReadAsStringAsync());
 
