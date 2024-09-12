@@ -1,6 +1,6 @@
 ﻿name: unit-test.yml
-on:
-  push: [main]
+on: [push, pull_request]
+
 
 jobs:
   unit-test:
