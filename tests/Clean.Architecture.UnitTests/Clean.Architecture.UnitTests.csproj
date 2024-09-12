@@ -29,12 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="xunit.runner.json">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Clean.Architecture.Core\Clean.Architecture.Core.csproj" />
     <ProjectReference Include="..\..\src\Clean.Architecture.UseCases\Clean.Architecture.UseCases.csproj" />
   </ItemGroup>
