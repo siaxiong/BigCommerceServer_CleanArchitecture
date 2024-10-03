@@ -15,6 +15,7 @@ public interface IFishbowlRespository
 */
   public Task CreateFBSO(string orderString);
   public Task<double> GetFbCustomerCredit(string customerName);
+  public Task<List<FB_Credit>> GetAllFBCustomerCredits();
 
 /*  public FB_ShippingAddress CreateFBShippingAddress(BC_ShippingAddress address);
   public FB_BillingAddress CreateFBBillingAddress(BC_BillingAddress address);

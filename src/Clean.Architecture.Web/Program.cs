@@ -20,6 +20,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Clean.Architecture.Infrastructure.BigCommerce;
 using Clean.Architecture.UseCases.Abstractions.Respository;
 using System.Collections;
+using Clean.Architecture.Web.Schedule;
+using Quartz;
 
 
 var logger = Log.Logger = new LoggerConfiguration()
@@ -75,6 +77,9 @@ foreach(DictionaryEntry entry in hashtable)
 }
 
 builder.Services.AddInfrastructureServices(builder.Configuration, microsoftLogger);
+builder.Services.AddQuartz();
+builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+
 
 if (builder.Environment.IsDevelopment())
 {
@@ -103,6 +108,35 @@ else
   app.UseDefaultExceptionHandler(); // from FastEndpoints
   app.UseHsts();
 }
+
+var schedulerFactory = app.Services.GetService<ISchedulerFactory>();
+
+IJobDetail job = JobBuilder.Create<MyJob>()
+  .WithIdentity("myJob", "group1")
+  .Build();
+
+ITrigger trigger = TriggerBuilder.Create()
+  .WithIdentity("myTrigger", "group1")
+  .StartNow()
+  .WithCronSchedule("0 */1 * ? * *", x=>x.WithMisfireHandlingInstructionFireAndProceed())
+  .ForJob("myJob", "group1")
+  .Build();
+
+if (schedulerFactory != null)
+{
+  var scheduler = await schedulerFactory.GetScheduler();
+  await scheduler.ScheduleJob(job, trigger);
+
+}
+
+var now = DateTime.Now;
+TimeZoneInfo pacificTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+DateTime utcNow = TimeZoneInfo.ConvertTime(now, pacificTimeZone);
+Console.WriteLine("***START TIME***");
+Console.WriteLine(utcNow.ToString() + " - Pacific Time" );
+Console.WriteLine(utcNow.ToLongTimeString());
+Console.WriteLine("***END TIME***");
+
 
 
 app.UseAuthenticationMiddleware();

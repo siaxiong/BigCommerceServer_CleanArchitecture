@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Clean.Architecture.Web.Fishbowl.SalesOrder;
 
-public class Create(IMediator _mediator) : Endpoint<CreateSalesOrderRequest, CreateSalesOrderResponse>
+public class Create(IMediator _mediator) : Endpoint<WebHookPayload, CreateSalesOrderResponse>
 {
   public override void Configure()
   {
@@ -15,9 +15,11 @@ public class Create(IMediator _mediator) : Endpoint<CreateSalesOrderRequest, Cre
     AllowAnonymous();
   }
 
-  public override async Task<CreateSalesOrderResponse> HandleAsync(CreateSalesOrderRequest req, CancellationToken cancellationToken)
+  public override async Task<CreateSalesOrderResponse> HandleAsync(WebHookPayload req, CancellationToken cancellationToken)
   {
-    string fB_SO = await _mediator.Send(new CreateSalesOrderCommand(req.orderId));
+    if (req.data is null) throw new Exception("No bigcommerce sales order id!");
+    
+    string fB_SO = await _mediator.Send(new CreateSalesOrderCommand(req.data.id));
 
     Response = new CreateSalesOrderResponse(fB_SO);
     return Response;

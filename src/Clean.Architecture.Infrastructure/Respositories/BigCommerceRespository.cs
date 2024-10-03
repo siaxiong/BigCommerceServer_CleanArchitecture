@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Clean.Architecture.Core.Entities.BC;
+using Clean.Architecture.Core.Entities.Fishbowl;
 using Clean.Architecture.Core.Interfaces;
 using Clean.Architecture.UseCases.Abstractions.Respository;
 using Clean.Architecture.Infrastructure.HttpObjectMapping;
@@ -14,6 +15,8 @@ using MimeKit.Tnef;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Clean.Architecture.Infrastructure.BigCommerce;
 using Clean.Architecture.Core.Interfaces.Command;
+using Clean.Architecture.Infrastructure.Data;
+using Clean.Architecture.UseCases.Abstractions;
 
 namespace Clean.Architecture.Infrastructure.Respositories;
 public class BigCommerceRepository : IBigCommerceRepository
@@ -21,26 +24,37 @@ public class BigCommerceRepository : IBigCommerceRepository
   private readonly B2C_V2_Context _b2c_v2_context;
   private readonly B2C_V3_Context _b2c_v3_context;
   private readonly B2B_Context _b2b_context;
+  private readonly IFishbowlRespository _fishbowlRespository;
 
-  public BigCommerceRepository (B2C_V2_Context b2c_v2_context, B2C_V3_Context b2c_v3_context, B2B_Context b2b_context)
+  public BigCommerceRepository (B2C_V2_Context b2c_v2_context, B2C_V3_Context b2c_v3_context, B2B_Context b2b_context, IFishbowlRespository fishbowlRespository)
   {
     _b2c_v2_context = b2c_v2_context;
     _b2c_v3_context = b2c_v3_context;
     _b2b_context = b2b_context;
+    _fishbowlRespository = fishbowlRespository;
   }
   public async Task<BC_Order> GetBCOrder(int orderId)
   {
+
+    var shippingAdd = await GetBCOrderShippingAddress(orderId);
     var order = await _b2c_v2_context.GetOrder(orderId);
 
     BC_BillingAddress billingAddress = await GetBCOrderBillingAddress(orderId);
     BC_ShippingAddress shippingAddress = await GetBCOrderShippingAddress(orderId);
     List<BC_OrderProduct> productList = await GetBCOrderProductList(orderId);
+    Console.WriteLine("***SHIPPING COST START***");
+    Console.WriteLine(order.shipping_cost_ex_tax);
+    Console.WriteLine(shippingAdd.shipping_method);
+    Console.WriteLine("***SHIPPING COST END***");
+
 
     return new BC_Order(
       order.id,
       order.status_id,
       order.customer_id,
       order.subtotal_inc_tax,
+      Convert.ToDouble(order.shipping_cost_ex_tax),
+      shippingAdd.shipping_method,
       order.payment_status,
       order.payment_method,
       order.store_credit_amount,
@@ -152,11 +166,45 @@ public class BigCommerceRepository : IBigCommerceRepository
 
   public async Task ChangeOrderStatus(int orderId)
   {
-    await _b2b_context.ChangeerB2BOrdStatus(orderId);
+    await _b2b_context.ChangeB2BOrdStatus(orderId);
   }
 
   public async Task UpdateCompanyCredits(int companyId, double credits)
   {
     await _b2b_context.UpdateB2BCompanyCredits(companyId, credits);
+  }
+
+  public bool CheckExistence(string b2bCompanyName, List<FB_Credit> fbCredit)
+  {
+    return fbCredit.Exists(x => x.CustomerName == b2bCompanyName);
+  }
+  public async Task UpdateAllCustomerCredits()
+  {
+    List<FB_Credit> fbCredits = await _fishbowlRespository.GetAllFBCustomerCredits();
+    List<Http_B2B_Company> allB2BCompanies = await _b2b_context.GetAllCompanies();
+    List<B2B_Company_Credit> b2BCompanyCredits = new List<B2B_Company_Credit>();
+    var now = DateTime.Now;
+    TimeZoneInfo pacificTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+    DateTime utcNow = TimeZoneInfo.ConvertTime(now, pacificTimeZone);
+
+    foreach (FB_Credit fbCredit in fbCredits)
+    {
+      foreach (Http_B2B_Company b2bBCompany in allB2BCompanies)
+      {
+        if ((fbCredit.CustomerName)?.Trim() == (b2bBCompany.companyName)?.Trim())
+        {
+          List<B2B_Company_Extra_Field> extraFields = new List<B2B_Company_Extra_Field>();
+           extraFields.Add(new B2B_Company_Extra_Field{fieldName = "Remaining_Credits (Negative # means have money.)", fieldValue=$"${fbCredit.CreditAmount.ToString()}   {utcNow.ToString() + " - Pacific Time" }"});
+          
+           b2BCompanyCredits.Add(new B2B_Company_Credit(b2bBCompany.companyId.ToString(), extraFields));
+        }
+      }
+    }
+
+    for (int i = 0; i < (b2BCompanyCredits.Count) / 10; i++)
+    {
+      await _b2b_context.UpdateBulkB2BCompanyCredits(b2BCompanyCredits.GetRange(i * 10 , 10));
+    }
+
   }
 }

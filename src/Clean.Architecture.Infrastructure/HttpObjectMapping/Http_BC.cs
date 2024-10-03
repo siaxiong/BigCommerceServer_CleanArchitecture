@@ -50,7 +50,8 @@ public record Http_B2C_Order(
   string discount_amount,
   string subtotal_inc_tax,
   string total_inc_tax,
-  int status_id
+  int status_id,
+  string shipping_cost_ex_tax
   );
 public record Http_B2C_CustomerGroupName(
   string name

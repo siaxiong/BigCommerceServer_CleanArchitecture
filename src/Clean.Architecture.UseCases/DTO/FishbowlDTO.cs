@@ -92,7 +92,7 @@ public class FishbowlDTO
   //Fishbowl
   public string CSVOrderDTO(FB_BillingAddress fb_BillingAddress,
     FB_ShippingAddress fb_ShippingAddress,
-    BC_Customer bc_Customer, List<FB_SOItem> fb_soItemList, int orderID)
+    BC_Customer bc_Customer, List<FB_SOItem> fb_soItemList, int orderID, string shipping_speed, double shipping_cost)
   {
     List<string> SOHeaderList = new List<string>();
     
@@ -132,6 +132,7 @@ public class FishbowlDTO
         $"{item.ProductDescription}",$"{item.ProductQuantity}",
         $"ea",$"{item.ProductPrice}" });
     }
+    OrderItemList.Add(new string[]{"Item","60", "Shipping & Tracking", shipping_speed, "1", "ea", $"{shipping_cost}" });
 
     return JsonSerializer.Serialize((OrderItemList));
   }

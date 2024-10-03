@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Clean.Architecture.Core.Entities.BC;
 
+
 namespace Clean.Architecture.UseCases.Abstractions.Respository;
 public interface IBigCommerceRepository
 {
@@ -18,6 +19,7 @@ public interface IBigCommerceRepository
   Task ChangeOrderStatus(int orderId);
 
   Task UpdateCompanyCredits(int companyId, double credits);
+  Task UpdateAllCustomerCredits();
 /*  Task<string> GetCustomerEmail(int customerId);
 */
 }

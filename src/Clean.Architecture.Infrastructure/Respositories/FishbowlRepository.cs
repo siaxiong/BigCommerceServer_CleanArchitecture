@@ -13,7 +13,6 @@ using Clean.Architecture.UseCases.Abstractions;
 using Clean.Architecture.Infrastructure.HttpObjectMapping;
 
 namespace Clean.Architecture.Infrastructure.Respositories;
-
 public class FishbowlRespository : IFishbowlRespository
 {
   public readonly FishbowlContext _fbContext;
@@ -26,6 +25,10 @@ public class FishbowlRespository : IFishbowlRespository
     await _fbContext.CreateFBSO(orderString);
   }
 
+  public async Task<List<FB_Credit>> GetAllFBCustomerCredits()
+  {
+    return await _fbContext.GetAllCustomerCredits();
+  }
   public async Task<double> GetFbCustomerCredit(string customerName)
   {
     var resp = await _fbContext.GetCustomerCredit(customerName);

@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Clean.Architecture.Infrastructure.Data;
 using Clean.Architecture.Infrastructure.HttpObjectMapping;
 using Microsoft.Extensions.Configuration;
 
@@ -53,6 +54,34 @@ public class B2B_Context {
     if (data != null) return data.data;
     else throw new Exception("null resp, GetCompanies()");
   }
+
+  public async Task<List<Http_B2B_Company>> GetAllCompanies()
+  {
+    List<Http_B2B_Company> companies = new List<Http_B2B_Company>();
+    int offSet = 0;
+    int totalCount = 1;
+    
+    do
+    {
+      var resp = await _httpClient.GetAsync(_httpClient.BaseAddress + "/companies"
+        + $"?limit=250&offset={offSet}");
+      var resString = await resp.Content.ReadAsStringAsync();
+      
+      Http_B2B_Companies_Payload? data = JsonSerializer.Deserialize<Http_B2B_Companies_Payload>(resString);
+      if (data == null) throw new Exception("null resp, GetAllCompanies()");
+      
+      foreach (Http_B2B_Company company in data.data)
+      {
+        companies.Add(company);
+      }
+
+      offSet += 250;
+      totalCount = data.meta.pagination.totalCount;
+
+    }while(companies.Count < totalCount);
+
+    return companies;
+  }
   public async Task UpdateB2BCompanyCredits(int companyId, double credits) {
     var content = new ExtraFieldsPayload();
     content.extraFields = new List<ExtraField>();
@@ -63,7 +92,18 @@ public class B2B_Context {
       );
     var resp = await _httpClient.PutAsync(_httpClient.BaseAddress + "/companies/" + companyId, httpContent);
   }
-  public async Task ChangeerB2BOrdStatus(int orderId) {
+
+  public async Task UpdateBulkB2BCompanyCredits(List<B2B_Company_Credit> companyCredits)
+  {
+    var httpContent = new StringContent(
+      JsonSerializer.Serialize(companyCredits),
+      Encoding.UTF8, "application/json"
+      );
+    var resp = await _httpClient.PutAsync(_httpClient.BaseAddress + "/companies/bulk", httpContent);
+    Console.WriteLine(resp.Content.ReadAsStringAsync().Result);
+    Console.WriteLine(resp.ReasonPhrase?.ToString());
+  }
+  public async Task ChangeB2BOrdStatus(int orderId) {
     var requestContent = new StringContent(JsonSerializer.Serialize("{status: \"Insufficient funds\"}"), Encoding.UTF8, "application/json");
     var resp = await _httpClient.PutAsync(_httpClient.BaseAddress + "/orders/" + orderId,  requestContent);
     var respString = resp.Content.ReadAsStringAsync();
